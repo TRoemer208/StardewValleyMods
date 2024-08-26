@@ -1,0 +1,27 @@
+{
+  "Name": "BriarSinger",
+  "Author": "Teoshen",
+  "Version": "1.0.0",
+  "Description": "Adds a witch/druid themed gish combat and utility profession to the game.",
+  "UniqueID": "Teoshen.BriarSinger",
+  "EntryDll": "BriarSinger.dll",
+  "MinimumApiVersion": "4.0.0",
+  "dependencies": [
+    {
+      "UniqueID": "spacechase0.SpaceCore",
+      "MinimumVersion": "1.21.2",
+      "isRequired": true
+    },
+    {
+      "UniqueID": "spacechase0.ManaBar",
+      "MinimumVersion": "1.1.3",
+      "isRequired": true
+    },
+    {
+      "UniqueID": "PathosChild.ContentPatcher",
+      "MinimumVersion": "2.2.0",
+      "isRequired": true
+    }
+  ],
+  "UpdateKeys": []
+}
