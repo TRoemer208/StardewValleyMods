@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <GamePath>E:\SteamLibrary\steamapps\common\Stardew Valley</GamePath> 
+	  <GameModsPath>$(GamePath)\Mods</GameModsPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
+    <PackageReference Include="VisualStudio.gitignore" Version="1.0.1" />
+	  <Reference Include="$(GamePath)\Mods\SpaceCore\SpaceCore.dll">
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="$(GamePath)\Mods\ContentPatcher\ContentPatcher.dll">
+	    <Private>False</Private>
+	  </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\farmer\" />
+    <Folder Include="assets\spellcomponents\" />
+  </ItemGroup>
+
+</Project>
