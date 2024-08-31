@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,15 +20,15 @@ using BriarSinger.Framework;
 
 namespace BriarSinger.Spells.Components
 {
-    public class Bolt : Projectile
+    public class StarShot : Projectile
     {
         private static IModHelper helper;
         public static Texture2D projectile;
         public readonly int damage = new int();
 
-       public Bolt() { }
+       public StarShot() { }
 
-        public Bolt(int Damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, int Velocity, bool Explodes, bool isSeeking, GameLocation location = null, Character owner = null) : this()
+        public StarShot(int Damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, int Velocity, bool Explodes, bool isSeeking, GameLocation location = null, Character owner = null) : this()
         {
             this.damage = Damage;
             base.damagesMonsters.Value = true;
@@ -151,3 +152,4 @@ namespace BriarSinger.Spells.Components
 
     }
 }
+*/

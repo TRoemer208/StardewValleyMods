@@ -14,6 +14,7 @@ using BriarSinger.Spells.Components;
 using BriarSinger.Framework;
 using StardewValley.Enchantments;
 using StardewValley.Monsters;
+using StardewValley.GameData.Weapons;
 
 
 namespace BriarSinger
@@ -27,6 +28,7 @@ namespace BriarSinger
         public static IManaBarApi ManaBarApi;
         public static ContentPatcher.IContentPatcherAPI ContentPatcherApi;
         public static string BriarSingerContentPatcherId = "Teoshen.CP.BriarSinger";
+        public static readonly string HARPSWORD_WEAPON_ID = "HarpSword";
 
         /// <summary>
         /// Initalize all the classes in ModEntry
@@ -111,10 +113,44 @@ namespace BriarSinger
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
+            //Currently for the projectile info, only for Bolt, will try to make it dynamic as I add more spells.
             if (e.Name.IsEquivalentTo("BriarSinger/MyProjectile"))
             {
                 e.LoadFromModFile<Texture2D>("assets/spellcomponents/boltprojectile.png", AssetLoadPriority.Medium);
             }
+
+            // Adds the Harpsword weapon to the game.
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Weapons"))
+             {
+                  e.Edit(asset =>
+                     {
+                    IAssetDataForDictionary<string, WeaponData> editor = asset.AsDictionary<string, WeaponData>();
+
+                    editor.Data[HARPSWORD_WEAPON_ID] = new WeaponData
+                             {
+                        Name = "HarpSword",
+                        DisplayName = "HarpSword",
+                        Description = "Your harp, modified with forest magic to be a weapon.",
+                        Type = 3,
+                        SpriteIndex = 0,
+                        Texture = "BriarSinger/weapons",
+                        MinDamage = 15,
+                        MaxDamage = 25,
+                        Speed = 4,
+                        CanBeLostOnDeath = false,
+                        AreaOfEffect = 2,
+                        CritChance = 0.04f,
+                        CritMultiplier = 3.5f,
+                        Precision = 10
+                             };
+                    });
+             }
+            //Add the harpsword weapon icon to the weapon sprite sheet.
+            if (e.NameWithoutLocale.IsEquivalentTo("BriarSinger/weapons"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/farmer/harpsword.png", AssetLoadPriority.Medium);
+            }
+            
         }
 
         ///<summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
