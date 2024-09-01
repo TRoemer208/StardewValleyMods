@@ -178,7 +178,7 @@ namespace BriarSinger
                 {
                 return;
             }
-              Game1.currentLocation.projectiles.Add(new Bolt(damage, 0, 10, closestMonster.getStandingPosition() + new Vector2(-16, -256), true, caster.currentLocation, caster));
+              Game1.currentLocation.projectiles.Add(new Bolt(damage, 0, 10, closestMonster.getStandingPosition() + new Vector2(-16, -256), 4, true, caster.currentLocation, caster));
         }
 
         //Math to figure out if the game needs to change your direction based on where you cast your spell.
