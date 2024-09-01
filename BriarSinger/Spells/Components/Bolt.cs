@@ -94,18 +94,8 @@ namespace BriarSinger.Spells.Components
         {
             var angle = 0f;
 
-            if (yVelocity > 0f)
-            {
-                angle = (float)Math.PI / 2.0f; // 90 degrees
-            }
-            else if (yVelocity < 0f)
-            {
-                angle = (float)Math.PI / -2.0f; // 270 degrees
-            }
-            return angle;
+         return angle;
         }
-
-
 
         public virtual Farmer GetPlayerWhoFiredMe(GameLocation location)
         {
