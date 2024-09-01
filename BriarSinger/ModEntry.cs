@@ -9,13 +9,12 @@ using StardewModdingAPI.Utilities;
 using SpaceCore;
 using SpaceShared.APIs;
 using SpaceShared.ConsoleCommands;
-
-using BriarSinger.Spells.Components;
-using BriarSinger.Framework;
 using StardewValley.Enchantments;
 using StardewValley.Monsters;
 using StardewValley.GameData.Weapons;
 
+using BriarSinger.Spells.Components;
+using BriarSinger.Framework;
 
 namespace BriarSinger
 {
@@ -156,15 +155,20 @@ namespace BriarSinger
         ///<summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
         public void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
+            var caster = Game1.player;
+
             if (Game1.activeClickableMenu != null)
                 return;
-            var caster = Game1.player;
 
             if (Context.IsPlayerFree)
                 if (e.Button == this.Config.CastBoltButton)
-                {
+                    {
                      CastBolt(caster);
                     }
+                if (caster.CurrentTool?.Name == "HarpSword" && e.Button.IsActionButton())
+                    {
+                     CastStarShot(caster);
+                    } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
             ModEntry.FixMana(Game1.player); //remove this after adding mana regen
         }
 
@@ -179,6 +183,16 @@ namespace BriarSinger
                 return;
             }
               Game1.currentLocation.projectiles.Add(new Bolt(damage, 0, 10, closestMonster.getStandingPosition() + new Vector2(-16, -256), 4, true, caster.currentLocation, caster));
+        }
+
+        //Starshot spell information
+        private void CastStarShot(Farmer caster)
+        {
+            int damage = 25; //replace this with better randomized math later
+            Vector2 velocity1 = TranslateVector(new Vector2(0, 10), caster.FacingDirection);
+            Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
+          
+            Game1.currentLocation.projectiles.Add(new StarShot(damage, velocity1.X, velocity1.Y, caster.getStandingPosition() + new Vector2(0, -64) + startPos1, 6, caster.currentLocation, caster));
         }
 
         //Math to figure out if the game needs to change your direction based on where you cast your spell.

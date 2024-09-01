@@ -161,9 +161,11 @@ namespace BriarSinger.Spells.Components
                 b.Draw(
                     tail, 
                     Game1.GlobalToLocal(Game1.viewport, Vector2.Lerp((i == base.tail.Count - 1) ? this.position.Value : base.tail.ElementAt(i + 1), base.tail.ElementAt(i), (float)base.tailCounter / 60f) + new Vector2(0f, 0f - this.height.Value) + tailoffset), 
-                    new Rectangle(0, 0, 24, 24), this.color.Value, 
+                    new Rectangle(0, 0, 24, 24), 
+                    this.color.Value, 
                     angle, 
-                    new Vector2(8f, 8f), tail_scale, 
+                    new Vector2(8f, 8f), 
+                    tail_scale, 
                     SpriteEffects.None, 
                     (this.position.Y - (float)(base.tail.Count - i) + 96f) / 10000f);
             }

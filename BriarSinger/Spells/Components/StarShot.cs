@@ -1,12 +1,10 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Netcode;
 
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
@@ -28,12 +26,12 @@ namespace BriarSinger.Spells.Components
 
        public StarShot() { }
 
-        public StarShot(int Damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, int Velocity, bool Explodes, bool isSeeking, GameLocation location = null, Character owner = null) : this()
+        public StarShot(int Damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, GameLocation location = null, Character owner = null) : this()
         {
             this.damage = Damage;
             base.damagesMonsters.Value = true;
             this.damagesMonsters.Value = true;
-            base.currentTileSheetIndex.Value = 1;
+            base.currentTileSheetIndex.Value = 17;
             base.theOneWhoFiredMe.Set(location, owner);
             base.tailLength.Value = taillength;
             base.xVelocity.Value = xVelocity;
@@ -64,10 +62,14 @@ namespace BriarSinger.Spells.Components
            private void explosionAnimation(GameLocation location)
            {
             Multiplayer multiplayer = Game1.Multiplayer;
-            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(448, 256, 64, 64), 60, 5, 1, base.position.Value + new Vector2(16, 256), flicker: false, flipped: false));
+            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(128, 256, 64, 64), 60, 6, 1, base.position.Value + new Vector2(16, 256), flicker: true, flipped: false));
                base.destroyMe = true;
                this.destroyMe = true;
-           }
+            location.projectiles.RemoveWhere((Func<Projectile, bool>)(projectile =>
+            {
+                return projectile.destroyMe;
+            }));
+        }
       
         public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer player)
         {
@@ -119,12 +121,12 @@ namespace BriarSinger.Spells.Components
           
             var angle = GetAngleForTexture(base.yVelocity.Value);
            
-            projectile = Game1.content.Load<Texture2D>("BriarSinger/MyProjectile");
+           // projectile = Game1.content.Load<Texture2D>("BriarSinger/MyProjectile");
 
 
             b.Draw(
-              //  Projectile.projectileSheet,
-                projectile,
+                Projectile.projectileSheet,
+             //   projectile,
                 Game1.GlobalToLocal(Game1.viewport, this.position.Value + new Vector2(0f, 0f - this.height.Value) + new Vector2(32f, 32f)),
                 new Rectangle(0, 0, 24, 24),
                 this.color.Value,
@@ -152,4 +154,3 @@ namespace BriarSinger.Spells.Components
 
     }
 }
-*/
