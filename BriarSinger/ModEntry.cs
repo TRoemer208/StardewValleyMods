@@ -172,14 +172,17 @@ namespace BriarSinger
         private void CastBolt(Farmer caster)
         {
             Monster closestMonster = MonsterHelper.GetClosestMonsterToCursor();
-            Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
+          //  Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
             int damage = 25; //replace this with the scaling factor when the profession levels are added
-
-            Game1.currentLocation.projectiles.Add(new Bolt(damage, 0, 10, closestMonster.getStandingPosition() + new Vector2(-16, -256), 3, 10, true, true, caster.currentLocation, caster));
+            if (closestMonster == null)
+                {
+                return;
+            }
+              Game1.currentLocation.projectiles.Add(new Bolt(damage, 0, 10, closestMonster.getStandingPosition() + new Vector2(-16, -256), true, caster.currentLocation, caster));
         }
 
         //Math to figure out if the game needs to change your direction based on where you cast your spell.
-        public static Vector2 TranslateVector(Vector2 vector, int facingDirection)
+       public static Vector2 TranslateVector(Vector2 vector, int facingDirection)
         {
             float outx = vector.X;
             float outy = vector.Y;
@@ -202,6 +205,7 @@ namespace BriarSinger
             }
             return new Vector2(outx, outy);
         }
+      
 
         //Add some mana to make sure the mana bar will show up. Change this after mana is complete so that it refills your mana bar at the start of the day.
         public static void FixMana(Farmer player)

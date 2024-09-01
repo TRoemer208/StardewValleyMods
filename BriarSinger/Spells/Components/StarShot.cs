@@ -33,7 +33,7 @@ namespace BriarSinger.Spells.Components
             this.damage = Damage;
             base.damagesMonsters.Value = true;
             this.damagesMonsters.Value = true;
-            base.currentTileSheetIndex.Value = 0;
+            base.currentTileSheetIndex.Value = 1;
             base.theOneWhoFiredMe.Set(location, owner);
             base.tailLength.Value = taillength;
             base.xVelocity.Value = xVelocity;

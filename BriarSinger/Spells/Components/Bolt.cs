@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Netcode;
 
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
@@ -23,28 +22,30 @@ namespace BriarSinger.Spells.Components
     {
         private static IModHelper helper;
         public static Texture2D projectile;
+
+        public delegate void OnCollisionBehavior(GameLocation location, int xPosition, int yPosition, Character who);
         public readonly int damage = new int();
 
        public Bolt() { }
 
-        public Bolt(int Damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, int Velocity, bool Explodes, bool isSeeking, GameLocation location = null, Character owner = null) : this()
+        public Bolt(int damage, float xVelocity, float yVelocity, Vector2 startingPosition, bool isSeeking, GameLocation location = null, Character owner = null) : this()
         {
-            this.damage = Damage;
+            this.damage = damage;
             base.damagesMonsters.Value = true;
             this.damagesMonsters.Value = true;
-            base.currentTileSheetIndex.Value = 0;
+         //   base.currentTileSheetIndex.Value = 0; //use this when the spell tilesheet gets completed to show where the game should get the sprite from
             base.theOneWhoFiredMe.Set(location, owner);
-            base.tailLength.Value = taillength;
+          //  base.tailLength.Value = taillength;
             base.xVelocity.Value = xVelocity;
             base.yVelocity.Value = yVelocity;
             base.position.Value = startingPosition;
             base.ignoreObjectCollisions.Value = true;
-
+            
         }
         
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-           /* t.performUseAction(tileLocation);
+         /*   t.performUseAction(tileLocation);
             this.explosionAnimation(location);
            */
         }
@@ -58,17 +59,23 @@ namespace BriarSinger.Spells.Components
             {
                 location.damageMonster(n.GetBoundingBox(), this.damage, this.damage, isBomb: false, player, isProjectile: true);
             }
-            base.destroyMe = true;
-            this.destroyMe = true;
         }
            private void explosionAnimation(GameLocation location)
            {
             Multiplayer multiplayer = Game1.Multiplayer;
-            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(448, 256, 64, 64), 60, 5, 1, base.position.Value + new Vector2(16, 256), flicker: false, flipped: false));
-               base.destroyMe = true;
-               this.destroyMe = true;
-           }
-      
+            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(64, 640, 64, 64), 60, 7, 1, base.position.Value, flicker: false, flipped: false));
+            this.destroyMe = true;
+            location.projectiles.RemoveWhere((Func<Projectile, bool>)(projectile =>
+            {
+                return projectile.destroyMe;
+            }));
+        }
+
+        public static void explodeOnImpact(GameLocation location, int x, int y, Character who)
+        {
+
+        }
+
         public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer player)
         {
             if ((bool)base.damagesMonsters.Value)
