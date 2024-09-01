@@ -44,8 +44,9 @@ namespace BriarSinger.Spells.Components
         
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-            t.performUseAction(tileLocation);
+           /* t.performUseAction(tileLocation);
             this.explosionAnimation(location);
+           */
         }
      
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
@@ -112,7 +113,6 @@ namespace BriarSinger.Spells.Components
 
 
             b.Draw(
-              //  Projectile.projectileSheet,
                 projectile,
                 Game1.GlobalToLocal(Game1.viewport, this.position.Value + new Vector2(0f, 0f - this.height.Value) + new Vector2(32f, 32f)),
                 new Rectangle(0, 0, 24, 24),
