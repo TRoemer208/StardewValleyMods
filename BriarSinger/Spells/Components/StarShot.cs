@@ -15,6 +15,7 @@ using StardewValley.TerrainFeatures;
 using StardewValley.Util;
 
 using BriarSinger.Framework;
+using StardewValley.Tools;
 
 namespace BriarSinger.Spells.Components
 {

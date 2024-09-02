@@ -15,6 +15,7 @@ using StardewValley.GameData.Objects;
 
 using BriarSinger.Spells.Components;
 using BriarSinger.Framework;
+using SpaceCore.Events;
 
 
 namespace BriarSinger
@@ -65,6 +66,8 @@ namespace BriarSinger
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
+            helper.Events.Input.ButtonReleased += this.OnButtonReleased;
+            SpaceCore.Events.SpaceEvents.BeforeGiftGiven += this.GivingGift;
         }
 
         ///<summary>Event called when the game launches to load content packs.</summary>
@@ -196,7 +199,13 @@ namespace BriarSinger
                     {
                      CastStarShot(caster);
                     } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
+             
             ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
+        }
+
+        public void OnButtonReleased(object sender, ButtonReleasedEventArgs e)
+        {
+            //put stuff here for if you're holding the harpsword and release button, it shoots a projectile
         }
 
         // Event run each second
@@ -204,6 +213,15 @@ namespace BriarSinger
         {
             { 
             ManaRegen(Game1.player);
+            }
+        }
+
+        //Event to stop the player from giving away their harp object
+        public void GivingGift(object sender, EventArgsBeforeReceiveObject e)
+        {
+            if (e.Gift.Name == "Harp")
+            {
+                e.Cancel = true;
             }
         }
 
