@@ -15,6 +15,7 @@ using StardewValley.GameData.Weapons;
 
 using BriarSinger.Spells.Components;
 using BriarSinger.Framework;
+using StardewValley.GameData.Objects;
 
 namespace BriarSinger
 {
@@ -28,6 +29,7 @@ namespace BriarSinger
         public static ContentPatcher.IContentPatcherAPI ContentPatcherApi;
         public static string BriarSingerContentPatcherId = "Teoshen.CP.BriarSinger";
         public static readonly string HARPSWORD_WEAPON_ID = "HarpSword";
+        public static readonly string HARP_OBJECT_ID = "HarpObject";
 
         /// <summary>
         /// Initalize all the classes in ModEntry
@@ -144,10 +146,31 @@ namespace BriarSinger
                              };
                     });
              }
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Objects"))
+            {
+                e.Edit(asset =>
+                {
+                    IAssetDataForDictionary<string, ObjectData> editor = asset.AsDictionary<string, ObjectData>();
+                    editor.Data[HARP_OBJECT_ID] = new ObjectData
+                    {
+                        Name = "Harp",
+                        DisplayName = "Mini Harp",
+                        Description = "It's your old mini harp. In good condition, but could use some tuning.",
+                        SpriteIndex = 0,
+                        Texture = "BriarSinger/Objects",
+                        Price = 200,
+                        Type = "Objects",
+                    };
+                });
+            }
             //Add the harpsword weapon icon to the weapon sprite sheet.
             if (e.NameWithoutLocale.IsEquivalentTo("BriarSinger/weapons"))
             {
                 e.LoadFromModFile<Texture2D>("assets/farmer/harpsword.png", AssetLoadPriority.Medium);
+            }
+            if (e.NameWithoutLocale.IsEquivalentTo("BriarSinger/Objects"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/farmer/harpobject.png", AssetLoadPriority.Medium);
             }
             
         }
