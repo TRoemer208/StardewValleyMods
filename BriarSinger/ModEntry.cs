@@ -9,13 +9,13 @@ using StardewModdingAPI.Utilities;
 using SpaceCore;
 using SpaceShared.APIs;
 using SpaceShared.ConsoleCommands;
-using StardewValley.Enchantments;
 using StardewValley.Monsters;
 using StardewValley.GameData.Weapons;
+using StardewValley.GameData.Objects;
 
 using BriarSinger.Spells.Components;
 using BriarSinger.Framework;
-using StardewValley.GameData.Objects;
+
 
 namespace BriarSinger
 {
@@ -64,6 +64,7 @@ namespace BriarSinger
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
+            helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
         }
 
         ///<summary>Event called when the game launches to load content packs.</summary>
@@ -195,6 +196,13 @@ namespace BriarSinger
             ModEntry.FixMana(Game1.player); //remove this after adding mana regen
         }
 
+        public void OneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        {
+            { 
+            ManaRegen(Game1.player);
+            }
+        }
+
         //Bolt spell information
         private void CastBolt(Farmer caster)
         {
@@ -251,6 +259,13 @@ namespace BriarSinger
             {
                 player.setMaxMana(100);
                 player.addMana(25);
+            }
+        }
+        public static void ManaRegen(Farmer player)
+        {
+            if (player.GetCurrentMana() < 100)
+            {
+            player.addMana(1); //replace with the formula for mana additions after the profession levels are added
             }
         }
 
