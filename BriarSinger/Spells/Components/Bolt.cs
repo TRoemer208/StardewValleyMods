@@ -43,11 +43,10 @@ namespace BriarSinger.Spells.Components
             
         }
         
+
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-         /*   t.performUseAction(tileLocation);
-            this.explosionAnimation(location);
-           */
+         //Since Bolt is supposed to a "called from the heavens" kinda thing, we don't want it to touch terrain at all, so we override the base game's version to do nothing with it.
         }
      
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
@@ -60,6 +59,8 @@ namespace BriarSinger.Spells.Components
                 location.damageMonster(n.GetBoundingBox(), this.damage, this.damage, isBomb: false, player, isProjectile: true);
             }
         }
+
+        //Explosion Animation plays a sprite for all active players of an animation of the projectile going poof. Then it flips the destroyMe boolean to true and runs a cleanup to remove projectiles with that boolean. All 'endings' to the projectile need to call this.
            private void explosionAnimation(GameLocation location)
            {
             Multiplayer multiplayer = Game1.Multiplayer;
@@ -101,7 +102,7 @@ namespace BriarSinger.Spells.Components
         public static float GetAngleForTexture(float yVelocity)
         {
             var angle = 0f;
-
+            //Since this is always pointing down, we just set the angle to be the same every time.
          return angle;
         }
 
@@ -144,7 +145,7 @@ namespace BriarSinger.Spells.Components
             projectile = Game1.content.Load<Texture2D>("BriarSinger/MyProjectile");
             tail = Game1.content.Load<Texture2D>("BriarSinger/MyProjectile");
 
-
+            //Draws the main projectile to the game world.
             b.Draw(
                 projectile,
                 Game1.GlobalToLocal(Game1.viewport, this.position.Value + new Vector2(0f, 0f - this.height.Value) + new Vector2(32f, 32f)),
@@ -156,6 +157,7 @@ namespace BriarSinger.Spells.Components
                 SpriteEffects.None,
                 (this.position.Value.Y + 96f) / 100000f);
 
+            //Draws the tail to the game world, centered on the projectile and with each tail slowly shrinking in size.
             for (int i = base.tail.Count - 1; i >= 0; i--)
             {
                 b.Draw(
@@ -170,6 +172,7 @@ namespace BriarSinger.Spells.Components
                     (this.position.Y - (float)(base.tail.Count - i) + 96f) / 10000f);
             }
 
+            //Makes the projectile kinda disappear when it hits something as it goes into the sprite.
             if (this.height.Value > 0f)
             {
                 b.Draw(Game1.shadowTexture,

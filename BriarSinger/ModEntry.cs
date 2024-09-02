@@ -112,7 +112,10 @@ namespace BriarSinger
         }
 
   
-
+        /// <summary>
+        /// Event for when the mod requests assets to be loaded.
+        /// </summary>
+        
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
             //Currently for the projectile info, only for Bolt, will try to make it dynamic as I add more spells.
@@ -193,9 +196,10 @@ namespace BriarSinger
                     {
                      CastStarShot(caster);
                     } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
-            ModEntry.FixMana(Game1.player); //remove this after adding mana regen
+            ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
         }
 
+        // Event run each second
         public void OneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
             { 
@@ -203,11 +207,14 @@ namespace BriarSinger
             }
         }
 
+
+
+
+
         //Bolt spell information
         private void CastBolt(Farmer caster)
         {
             Monster closestMonster = MonsterHelper.GetClosestMonsterToCursor();
-          //  Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
             int damage = 25; //replace this with the scaling factor when the profession levels are added
             if (closestMonster == null)
                 {
