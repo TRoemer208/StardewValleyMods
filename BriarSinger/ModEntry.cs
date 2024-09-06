@@ -22,6 +22,7 @@ namespace BriarSinger
 {
     public class ModEntry : Mod
     {
+        public static Mod ModInstance;
         public static IModHelper helper;
         private ModConfig Config;
 
@@ -31,6 +32,7 @@ namespace BriarSinger
         public static string BriarSingerContentPatcherId = "Teoshen.CP.BriarSinger";
         public static readonly string HARPSWORD_WEAPON_ID = "HarpSword";
         public static readonly string HARP_OBJECT_ID = "HarpObject";
+        private bool isActionButtonDown;
 
         /// <summary>
         /// Initalize all the classes in ModEntry
@@ -43,11 +45,18 @@ namespace BriarSinger
             LoadAssets();
             SetUpEvents();
             this.Config = this.Helper.ReadConfig<ModConfig>();
+            ModInstance = this;
+
+            //Console Command
+            //helper.ConsoleCommands.Add("player_giveharpsword", "...", (cmd, args) => Game1.player.addItemByMenuIfNecessary(new HarpSword()));
+
         }
 
         //Initialize mana bar
         private static Texture2D ManaBg;
         private static Texture2D ManaFg;
+
+
 
         //Defines the color of the mana bar and loads it.
         private static void LoadAssets()
@@ -67,7 +76,8 @@ namespace BriarSinger
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
             helper.Events.Input.ButtonReleased += this.OnButtonReleased;
-            SpaceCore.Events.SpaceEvents.BeforeGiftGiven += this.GivingGift;
+            SpaceEvents.BeforeGiftGiven += this.GivingGift;
+          //  helper.Events.GameLoop.UpdateTicking += this.GameLoopUpdateTicking;
         }
 
         ///<summary>Event called when the game launches to load content packs.</summary>
@@ -126,6 +136,14 @@ namespace BriarSinger
             {
                 e.LoadFromModFile<Texture2D>("assets/spellcomponents/boltprojectile.png", AssetLoadPriority.Medium);
             }
+            if (e.Name.IsEquivalentTo("BriarSinger/MyProjectile2"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/spellcomponents/starshotprojectile.png", AssetLoadPriority.Medium);
+            }
+            if (e.Name.IsEquivalentTo("BriarSinger/MyProjectile3"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/spellcomponents/starshottail.png", AssetLoadPriority.Medium);
+            }            //don't judge me I promise I'll fix this when I have the tilesheet made
 
             // Adds the Harpsword weapon to the game.
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Weapons"))
@@ -152,7 +170,8 @@ namespace BriarSinger
                         Precision = 10
                              };
                     });
-             }
+             } 
+          
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Objects"))
             {
                 e.Edit(asset =>
@@ -195,16 +214,27 @@ namespace BriarSinger
                     {
                      CastBolt(caster);
                     }
-                if (caster.CurrentTool?.Name == "HarpSword" && e.Button.IsActionButton())
-                    {
-                     CastStarShot(caster);
-                    } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
+             if (caster.CurrentTool?.Name == "HarpSword" && e.Button.IsActionButton())
+                 {
+                //GameLocation location, int x, int y, int power, Farmer who
+              //  HarpSword.DoFunction(Game1.currentLocation, 0,0,0, caster);
+                Game1.playSound("slingshot");
+                  CastStarShot(caster);
+                 } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
+         
+            
+            if (e.Button.IsActionButton())
+            {
+                this.isActionButtonDown = true;
+            }
              
             ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
         }
 
         public void OnButtonReleased(object sender, ButtonReleasedEventArgs e)
         {
+            if (e.Button.IsActionButton())
+                this.isActionButtonDown = false;
             //put stuff here for if you're holding the harpsword and release button, it shoots a projectile
         }
 
@@ -222,9 +252,23 @@ namespace BriarSinger
             if (e.Gift.Name == "Harp")
             {
                 e.Cancel = true;
+                //I know that there's base game function to do this but I already wrote it before I figured it out and it works.
             }
         }
 
+        /// <summary>
+        /// Ok this one is a long shot, but if the player is holding the harpsword (which we might make a slingshot later) and the action button is down and blah blah it will enter the slingshot minigame.
+        /// </summary>
+     /*   private void GameLoopUpdateTicking(object sender, UpdateTickingEventArgs e)
+        {
+            var caster = Game1.player;
+
+            if (caster.CurrentTool?.Name == "HarpSword" && this.isActionButtonDown == true)
+            {
+                UseHarpBow(caster);
+            }
+        }
+     */
 
 
 
@@ -245,14 +289,29 @@ namespace BriarSinger
         private void CastStarShot(Farmer caster)
         {
             int damage = 25; //replace this with better randomized math later
+            var target = ModEntry.ModInstance.Helper.Input.GetCursorPosition();
+            Vector2 velocity = target.AbsolutePixels - Game1.player.getStandingPosition();
+            velocity.Normalize();
+            velocity *= 15;
+
+            Game1.currentLocation.projectiles.Add(new StarShot(damage, velocity, caster.getStandingPosition() + new Vector2(0, -64), 6, caster.currentLocation, caster));
+        }
+     
+
+        //UseHarpBow function information
+     /*   private void UseHarpBow(Farmer caster)
+        {
+           int damage = 10;
             Vector2 velocity1 = TranslateVector(new Vector2(0, 10), caster.FacingDirection);
             Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
+            
+            Game1.currentLocation.projectiles.Add(new HarpSword.PerformFire(damage, velocity1.X, velocity1.Y, caster.getStandingPosition() + new Vector2(0, -64) + startPos1, 6, caster.currentLocation, caster));
           
-            Game1.currentLocation.projectiles.Add(new StarShot(damage, velocity1.X, velocity1.Y, caster.getStandingPosition() + new Vector2(0, -64) + startPos1, 6, caster.currentLocation, caster));
         }
+     */
 
         //Math to figure out if the game needs to change your direction based on where you cast your spell.
-       public static Vector2 TranslateVector(Vector2 vector, int facingDirection)
+      /* public static Vector2 TranslateVector(Vector2 vector, int facingDirection)
         {
             float outx = vector.X;
             float outy = vector.Y;
@@ -275,7 +334,7 @@ namespace BriarSinger
             }
             return new Vector2(outx, outy);
         }
-      
+      */
 
         //Add some mana to make sure the mana bar will show up. Change this after mana is complete so that it refills your mana bar at the start of the day.
         public static void FixMana(Farmer player)

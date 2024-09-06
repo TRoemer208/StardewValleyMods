@@ -36,6 +36,7 @@ namespace BriarSinger.Framework
             ModEntry.ManaBarApi.SetMaxMana(player, newCap);
         }
 
+       
         
     }
    
