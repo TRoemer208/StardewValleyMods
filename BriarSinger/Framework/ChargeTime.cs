@@ -36,7 +36,7 @@ namespace BriarSinger.Framework
 
                     return 1f;
                 }
-                var requiredChargeTime = 750;
+                var requiredChargeTime = 500;
                 var chargeStartTime = pullStartTime;
              
 
@@ -117,7 +117,7 @@ namespace BriarSinger.Framework
             if (caster.CurrentTool?.Name == "HarpSword")
             {
                 var currentMilliseconds = Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
-                var requiredChargingTime = 750;
+                var requiredChargingTime = 500;
 
                 percentage = Utility.Clamp(percentage, 0f, 1f);
                 pullStartTime = Math.Abs(currentMilliseconds - (percentage * requiredChargingTime));
