@@ -20,6 +20,8 @@ namespace BriarSinger.Framework
 
         public bool isCharging;
         private static bool chargeComplete;
+        private static double pullStartTime;
+        private static bool canPlaySound = true;
         ModEntry modEntryInstance = new ModEntry();
 
         internal static float GetChargeTime()
@@ -35,7 +37,8 @@ namespace BriarSinger.Framework
                     return 1f;
                 }
                 var requiredChargeTime = 750;
-                var chargeStartTime = Game1.currentGameTime.TotalGameTime.TotalSeconds * 1000;
+                var chargeStartTime = pullStartTime;
+             
 
                 return Utility.Clamp((float)((Game1.currentGameTime.TotalGameTime.TotalMilliseconds - chargeStartTime) / (double)requiredChargeTime), 0f, 1f);
 
@@ -57,7 +60,11 @@ namespace BriarSinger.Framework
                     if (currentChargeTime >= 1f)
                     {
                         chargeComplete = true;
+                    if (canPlaySound == true)
+                    {
                         Game1.currentLocation.playSound("select");
+                        canPlaySound = false;
+                    }
                     }
                     else if (currentChargeTime < 1f)
                     {
@@ -73,16 +80,13 @@ namespace BriarSinger.Framework
             //links to bool in buttonreleased event
             if (ModEntry.IsActionButtonDown() == false)
             {
-               
-                if (isCharging)
-                {
                     if (chargeComplete)
                     {
                         var caster = Game1.player;
                         modEntryInstance.CastStarShot(caster);
                     }
                     ResetCharge();
-                }
+             
             }
         }
 
@@ -101,10 +105,28 @@ namespace BriarSinger.Framework
             isCharging = false;
             chargeComplete = false;
             Game1.player.CanMove = true;
+            canPlaySound = true;
         }
 
+
+        public static void SetChargeTime(float percentage)
+        {
+            var caster = Game1.player;
+
+
+            if (caster.CurrentTool?.Name == "HarpSword")
+            {
+                var currentMilliseconds = Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+                var requiredChargingTime = 750;
+
+                percentage = Utility.Clamp(percentage, 0f, 1f);
+                pullStartTime = Math.Abs(currentMilliseconds - (percentage * requiredChargingTime));
+            } 
+        }
         public static void DrawReticle(SpriteBatch b)
         {
+            SpriteBatch spriteBatch = Game1.spriteBatch;
+            spriteBatch.Begin();
             Point mousePos = Game1.getMousePosition();
             Vector2 mousePosVector = new Vector2(mousePos.X, mousePos.Y);
             b.Draw(Game1.mouseCursors,
@@ -116,6 +138,8 @@ namespace BriarSinger.Framework
                 1f,
                 SpriteEffects.None,
                 0.999999f);
+            spriteBatch.End();
+            //this is not working and I don't know why but it isn't erroring
         }
 
         //create a "chargetime" thing that counts up as the action button is held down. After 750ms, it is charged, plays a sound, and releasing it will shoot the starshot. Try to add a little sparkly animation so the player knows it's charged.

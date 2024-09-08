@@ -76,7 +76,7 @@ namespace BriarSinger
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
             helper.Events.Input.ButtonReleased += this.OnButtonReleased;
             SpaceEvents.BeforeGiftGiven += this.GivingGift;
-          //  helper.Events.GameLoop.UpdateTicking += this.GameLoopUpdateTicking;
+            helper.Events.GameLoop.UpdateTicking += this.GameLoopUpdateTicking;
         }
 
         ///<summary>Event called when the game launches to load content packs.</summary>
@@ -225,10 +225,11 @@ namespace BriarSinger
 
          ///<summary>Add a section here to do the spell swap mechanic. Should be shift-right click while holding the HarpSword.</summary>
             
-            if (e.Button.IsActionButton())
+             if (e.Button.IsActionButton() && caster.CurrentTool?.Name == "HarpSword")
             {
                chargeTimeInstance.WhileCharging();
                ModEntry.isActionButtonDown = true;
+               ChargeTime.SetChargeTime(0f);
             }
              
             ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
@@ -272,10 +273,14 @@ namespace BriarSinger
 
             if (caster.CurrentTool?.Name == "HarpSword" && ModEntry.isActionButtonDown == true)
             {
+
+
                 SpriteBatch spriteBatch = Game1.spriteBatch;
-                
+
+
                 ChargeTime.DrawReticle(spriteBatch);
                 ChargeTime.TickUpdate(caster);
+              
             }
             
         }
@@ -300,7 +305,7 @@ namespace BriarSinger
         public void CastStarShot(Farmer caster)
         {
             int damage = 25; //replace this with better randomized math later
-            var target = ModEntry.ModInstance.Helper.Input.GetCursorPosition();
+            var target = ModEntry.helper.Input.GetCursorPosition();
             Vector2 velocity = target.AbsolutePixels - Game1.player.getStandingPosition();
             velocity.Normalize();
             velocity *= 15;
