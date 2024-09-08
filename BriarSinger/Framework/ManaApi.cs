@@ -15,7 +15,7 @@ using SpaceShared;
 
 namespace BriarSinger.Framework
 {
-    internal static class Extensions
+    internal static class ManaApi
     {
         public static int GetCurrentMana(this Farmer player)
         {

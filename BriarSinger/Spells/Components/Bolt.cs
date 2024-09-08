@@ -27,6 +27,7 @@ namespace BriarSinger.Spells.Components
         public delegate void OnCollisionBehavior(GameLocation location, int xPosition, int yPosition, Character who);
         public readonly int damage = new int();
 
+
        public Bolt() { }
 
         public Bolt(int damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, bool isSeeking, GameLocation location = null, Character owner = null) : this()

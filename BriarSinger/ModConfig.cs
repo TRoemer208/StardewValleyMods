@@ -9,8 +9,11 @@ namespace BriarSinger
 {
     public class ModConfig
     {
-        ///<summary>The button to cast Bolt.</summary>
+        ///The button to cast Bolt.
         public SButton CastBoltButton { get; set; } = SButton.Q;
+
+        ///The button to cast the currently active spell.
+        public SButton CastSpellButton { get; set; } = SButton.G;
 
         public ModConfig() { }
     }

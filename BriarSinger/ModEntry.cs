@@ -32,7 +32,7 @@ namespace BriarSinger
         public static string BriarSingerContentPatcherId = "Teoshen.CP.BriarSinger";
         public static readonly string HARPSWORD_WEAPON_ID = "HarpSword";
         public static readonly string HARP_OBJECT_ID = "HarpObject";
-        private bool isActionButtonDown;
+        private static bool isActionButtonDown;
 
         /// <summary>
         /// Initalize all the classes in ModEntry
@@ -45,7 +45,6 @@ namespace BriarSinger
             LoadAssets();
             SetUpEvents();
             this.Config = this.Helper.ReadConfig<ModConfig>();
-            ModInstance = this;
 
             //Console Command
             //helper.ConsoleCommands.Add("player_giveharpsword", "...", (cmd, args) => Game1.player.addItemByMenuIfNecessary(new HarpSword()));
@@ -205,6 +204,7 @@ namespace BriarSinger
         public void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             var caster = Game1.player;
+            ChargeTime chargeTimeInstance = new ChargeTime();
 
             if (Game1.activeClickableMenu != null)
                 return;
@@ -214,18 +214,21 @@ namespace BriarSinger
                     {
                      CastBolt(caster);
                     }
-             if (caster.CurrentTool?.Name == "HarpSword" && e.Button.IsActionButton())
+            /* if (caster.CurrentTool?.Name == "HarpSword" && e.Button.IsActionButton())
                  {
-                //GameLocation location, int x, int y, int power, Farmer who
-              //  HarpSword.DoFunction(Game1.currentLocation, 0,0,0, caster);
-                Game1.playSound("slingshot");
+                  Game1.playSound("slingshot");
                   CastStarShot(caster);
-                 } // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it costs no mana or does more damage or something.
-         
+           
+                 }
+            */
+            // add an option that if the MeleeWeapon.defenseCooldown >0 it casts normally but if the defenseCooldown is at 0, it shoots out two spinning projectiles instead of one straight projectile.
+
+         ///<summary>Add a section here to do the spell swap mechanic. Should be shift-right click while holding the HarpSword.</summary>
             
             if (e.Button.IsActionButton())
             {
-                this.isActionButtonDown = true;
+               chargeTimeInstance.WhileCharging();
+               ModEntry.isActionButtonDown = true;
             }
              
             ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
@@ -233,9 +236,13 @@ namespace BriarSinger
 
         public void OnButtonReleased(object sender, ButtonReleasedEventArgs e)
         {
-            if (e.Button.IsActionButton())
-                this.isActionButtonDown = false;
-            //put stuff here for if you're holding the harpsword and release button, it shoots a projectile
+          if (e.Button.IsActionButton())
+            {
+                ChargeTime chargeTimeInstance = new ChargeTime();
+
+                ModEntry.isActionButtonDown = false;
+                chargeTimeInstance.ReleaseCharge();
+            }
         }
 
         // Event run each second
@@ -259,16 +266,20 @@ namespace BriarSinger
         /// <summary>
         /// Ok this one is a long shot, but if the player is holding the harpsword (which we might make a slingshot later) and the action button is down and blah blah it will enter the slingshot minigame.
         /// </summary>
-     /*   private void GameLoopUpdateTicking(object sender, UpdateTickingEventArgs e)
+        private void GameLoopUpdateTicking(object sender, UpdateTickingEventArgs e)
         {
             var caster = Game1.player;
 
-            if (caster.CurrentTool?.Name == "HarpSword" && this.isActionButtonDown == true)
+            if (caster.CurrentTool?.Name == "HarpSword" && ModEntry.isActionButtonDown == true)
             {
-                UseHarpBow(caster);
+                SpriteBatch spriteBatch = Game1.spriteBatch;
+                
+                ChargeTime.DrawReticle(spriteBatch);
+                ChargeTime.TickUpdate(caster);
             }
+            
         }
-     */
+    
 
 
 
@@ -286,7 +297,7 @@ namespace BriarSinger
         }
 
         //Starshot spell information
-        private void CastStarShot(Farmer caster)
+        public void CastStarShot(Farmer caster)
         {
             int damage = 25; //replace this with better randomized math later
             var target = ModEntry.ModInstance.Helper.Input.GetCursorPosition();
@@ -297,18 +308,6 @@ namespace BriarSinger
             Game1.currentLocation.projectiles.Add(new StarShot(damage, velocity, caster.getStandingPosition() + new Vector2(0, -64), 6, caster.currentLocation, caster));
         }
      
-
-        //UseHarpBow function information
-     /*   private void UseHarpBow(Farmer caster)
-        {
-           int damage = 10;
-            Vector2 velocity1 = TranslateVector(new Vector2(0, 10), caster.FacingDirection);
-            Vector2 startPos1 = TranslateVector(new Vector2(0, 96), caster.FacingDirection);
-            
-            Game1.currentLocation.projectiles.Add(new HarpSword.PerformFire(damage, velocity1.X, velocity1.Y, caster.getStandingPosition() + new Vector2(0, -64) + startPos1, 6, caster.currentLocation, caster));
-          
-        }
-     */
 
         //Math to figure out if the game needs to change your direction based on where you cast your spell.
       /* public static Vector2 TranslateVector(Vector2 vector, int facingDirection)
@@ -353,6 +352,12 @@ namespace BriarSinger
             }
         }
 
+       
+        public static bool IsActionButtonDown()
+        {
+            //doing this because I am bad at calling methods
+            return isActionButtonDown;
+        }
     }
     
 }

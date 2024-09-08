@@ -103,7 +103,7 @@ namespace BriarSinger.Spells.Components
      
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
         {
-            location.playSound("debuffHit");
+            location.playSound("hitEnemy");
             Farmer player = this.GetPlayerWhoFiredMe(location);
             this.explosionAnimation(location);
             if (n is Monster)
@@ -116,7 +116,7 @@ namespace BriarSinger.Spells.Components
            private void explosionAnimation(GameLocation location)
            {
             Multiplayer multiplayer = Game1.Multiplayer;
-            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(128, 256, 64, 64), 60, 6, 1, base.position.Value + new Vector2(16, 256), flicker: true, flipped: false));
+            multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(128, 256, 64, 64), 60, 6, 1, base.position.Value, flicker: true, flipped: false));
                base.destroyMe = true;
                this.destroyMe = true;
             location.projectiles.RemoveWhere((Func<Projectile, bool>)(projectile =>
@@ -151,7 +151,7 @@ namespace BriarSinger.Spells.Components
         {
             var angle = 0f;
 
-            if (yVelocity > 0f)
+         /*   if (yVelocity > 0f)
             {
                 angle = (float)Math.PI / 2.0f; // 90 degrees
             }
@@ -159,6 +159,7 @@ namespace BriarSinger.Spells.Components
             {
                 angle = (float)Math.PI / -2.0f; // 270 degrees
             }
+         */
             return angle;
         }
         public static Vector2 TailOffset(Vector2 basevector, float xVelocity, float yVelocity)
