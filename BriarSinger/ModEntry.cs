@@ -12,10 +12,13 @@ using SpaceShared.ConsoleCommands;
 using StardewValley.Monsters;
 using StardewValley.GameData.Weapons;
 using StardewValley.GameData.Objects;
+using SpaceCore.Events;
+using HarmonyLib;
 
 using BriarSinger.Spells.Components;
 using BriarSinger.Framework;
-using SpaceCore.Events;
+using StardewValley.Tools;
+
 
 
 namespace BriarSinger
@@ -33,6 +36,7 @@ namespace BriarSinger
         public static readonly string HARPSWORD_WEAPON_ID = "HarpSword";
         public static readonly string HARP_OBJECT_ID = "HarpObject";
         private static bool isActionButtonDown;
+        internal static IMonitor ModMonitor;
 
         /// <summary>
         /// Initalize all the classes in ModEntry
@@ -46,8 +50,14 @@ namespace BriarSinger
             SetUpEvents();
             this.Config = this.Helper.ReadConfig<ModConfig>();
 
-            //Console Command
-            //helper.ConsoleCommands.Add("player_giveharpsword", "...", (cmd, args) => Game1.player.addItemByMenuIfNecessary(new HarpSword()));
+            //harmony things
+            Harmony harmony = new Harmony(ModManifest.UniqueID);
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(MeleeWeapon), "beginSpecialMove"),
+                prefix: new HarmonyMethod(typeof(ModEntry), nameof(PerformSpecialAttack_Prefix))
+           );
+         
 
         }
 
@@ -66,6 +76,28 @@ namespace BriarSinger
             ModEntry.ManaFg.SetData(new[] { manaCol });
         }
 
+
+        //Harmony things, look here first if stuff is broke.
+
+        public static bool PerformSpecialAttack_Prefix(MeleeWeapon __instance, Farmer who)
+        {
+            try
+            {
+                if (__instance.Name == "HarpSword")
+                {
+                    return false; //maybe add our logic here instead but see how it goes
+                }
+                return true;
+               
+            }
+                catch (Exception e)
+                {
+                    ModMonitor.Log("$Failed to suppress weapon special attack.");
+                }
+            return true;
+        }
+
+       
 
         //Sets up events for the mod.
         private void SetUpEvents()

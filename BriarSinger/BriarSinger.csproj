@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
 	  <GamePath>E:\SteamLibrary\steamapps\common\Stardew Valley</GamePath> 
 	  <GameModsPath>$(GamePath)\Mods</GameModsPath>
+  <EnableHarmony>true</EnableHarmony>
   </PropertyGroup>
 
   <ItemGroup>
