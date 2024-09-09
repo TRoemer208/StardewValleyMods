@@ -94,9 +94,9 @@ namespace BriarSinger.Framework
         {
             if (ModEntry.IsActionButtonDown() == true)
             {
+        //        Game1.player.CanMove = false; //for some reason this freezes the game while charging, so turned off for now
                 isCharging = true;
                 chargeComplete = false;
-                Game1.player.CanMove = false;
             }
         }
 

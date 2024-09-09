@@ -150,16 +150,6 @@ namespace BriarSinger.Spells.Components
         public static float GetAngleForTexture(float yVelocity)
         {
             var angle = 0f;
-
-         /*   if (yVelocity > 0f)
-            {
-                angle = (float)Math.PI / 2.0f; // 90 degrees
-            }
-            else if (yVelocity < 0f)
-            {
-                angle = (float)Math.PI / -2.0f; // 270 degrees
-            }
-         */
             return angle;
         }
         public static Vector2 TailOffset(Vector2 basevector, float xVelocity, float yVelocity)

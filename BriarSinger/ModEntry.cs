@@ -259,9 +259,9 @@ namespace BriarSinger
             
              if (e.Button.IsActionButton() && caster.CurrentTool?.Name == "HarpSword")
             {
-               chargeTimeInstance.WhileCharging();
                ModEntry.isActionButtonDown = true;
                ChargeTime.SetChargeTime(0f);
+                chargeTimeInstance.WhileCharging();
             }
              
             ModEntry.FixMana(Game1.player); //change this after everything is done to be the OnDayStarted event that sets mana to full
