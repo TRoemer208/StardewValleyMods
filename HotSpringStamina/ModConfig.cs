@@ -27,15 +27,6 @@ namespace HotSpringRegeneration
             get => this.healthRegenMult;
             set => this.healthRegenMult = Math.Clamp(value - value % 10, 10, 200);
         }
-
-        public bool WorkOnlyInFarmCave
-        {
-            get; set;
-        }
-        public ModConfig() 
-        {
-            WorkOnlyInFarmCave = true;
-        }
        
     }
 }

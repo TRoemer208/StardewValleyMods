@@ -52,13 +52,7 @@ namespace HotSpringRegeneration
                     reset: () => this.Config = new ModConfig(),
                     save: () => this.Helper.WriteConfig(this.Config)
                     );
-                configMenu.AddBoolOption(
-      mod: this.ModManifest,
-      name: () => "Work only in the farm cave?",
-      tooltip: () => "Limit the changes to only the farm cave hot springs.",
-      getValue: () => this.Config.WorkOnlyInFarmCave,
-      setValue: value => this.Config.WorkOnlyInFarmCave = value
-      );
+             
                 configMenu.AddNumberOption(
              mod: this.ModManifest,
              name: () => "Stamina Regeneration Multiplier",
@@ -85,12 +79,12 @@ namespace HotSpringRegeneration
 
         private void Player_Warped(object? sender, WarpedEventArgs e)
         {
-            if (Game1.currentLocation.NameOrUniqueName != "FarmCave" && Config.WorkOnlyInFarmCave == true)
+            if (Game1.currentLocation.NameOrUniqueName != "FarmCave")
             {
                 Helper.Events.GameLoop.UpdateTicked -= GameLoop_UpdateTicked;
                 return;
             }
-            else if ((Config.WorkOnlyInFarmCave == false) || (Config.WorkOnlyInFarmCave == true && Game1.currentLocation.NameOrUniqueName == "FarmCave"))
+            else if ((Game1.currentLocation.NameOrUniqueName == "FarmCave"))
             {
                 Helper.Events.GameLoop.UpdateTicked += GameLoop_UpdateTicked;
 
@@ -136,12 +130,12 @@ namespace HotSpringRegeneration
         private void ChangeStaminaRegen(Farmer player, GameLocation location, double currentTime)
         {
 
-            if (Config.WorkOnlyInFarmCave == true && Game1.currentLocation.NameOrUniqueName != "FarmCave" || Config.StamRegenMult == 100 || (counter % 10 == 0))
+            if (Game1.currentLocation.NameOrUniqueName != "FarmCave" || Config.StamRegenMult == 100 || (counter % 10 == 0))
             {
                 return;
             }
 
-            else if (Game1.currentLocation.NameOrUniqueName == "FarmCave" && Game1.player.swimming.Value == true || Config.WorkOnlyInFarmCave == false && Game1.player.swimming.Value == true)
+            else if (Game1.currentLocation.NameOrUniqueName == "FarmCave" && Game1.player.swimming.Value == true)
             {
                 if (player.stamina < 20 || player.stamina >= player.maxStamina)
                 {
@@ -172,12 +166,12 @@ namespace HotSpringRegeneration
         private void ChangeHealthRegen(Farmer player, GameLocation location, double currentTime)
         {
 
-            if (Config.WorkOnlyInFarmCave == true && Game1.currentLocation.NameOrUniqueName != "FarmCave" || Config.HealthRegenMult == 100 || (counter % 10 == 0))
+            if (Game1.currentLocation.NameOrUniqueName != "FarmCave" || Config.HealthRegenMult == 100 || (counter % 10 == 0))
             {
                 return;
             }
 
-            else if (Game1.currentLocation.NameOrUniqueName == "FarmCave" && Game1.player.swimming.Value == true || Config.WorkOnlyInFarmCave == false && Game1.player.swimming.Value == true)
+            else if (Game1.currentLocation.NameOrUniqueName == "FarmCave" && Game1.player.swimming.Value == true)
             {
                 if (player.health < 20 || player.health >= player.maxHealth)
                 {
