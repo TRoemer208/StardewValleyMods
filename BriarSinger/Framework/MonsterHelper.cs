@@ -11,12 +11,12 @@ using StardewValley.Monsters;
 
 namespace BriarSinger.Framework
 {
-    
+
     public static class MonsterHelper
     {
         public static Monster GetClosestMonsterToCursor()
         {
-            Monster closestMonsterCursor = Utility.getClosestMonsterWithinRange(Game1.currentLocation, Game1.currentCursorTile*64, 128);
+            Monster closestMonsterCursor = Utility.getClosestMonsterWithinRange(Game1.currentLocation, Game1.currentCursorTile * 64, 128);
 
             if (closestMonsterCursor == null)
             {

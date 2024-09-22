@@ -26,7 +26,7 @@ namespace BriarSinger.Spells.Components
         public static Texture2D tail;
         public readonly int damage = new int();
 
-       public StarShot() { }
+        public StarShot() { }
 
         public StarShot(int Damage, Vector2 velocity, Vector2 startingPosition, int taillength, GameLocation location = null, Character owner = null) : this()
         {
@@ -100,7 +100,7 @@ namespace BriarSinger.Spells.Components
             t.performUseAction(tileLocation);
             this.explosionAnimation(location);
         }
-     
+
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
         {
             location.playSound("hitEnemy");
@@ -113,18 +113,18 @@ namespace BriarSinger.Spells.Components
             base.destroyMe = true;
             this.destroyMe = true;
         }
-           private void explosionAnimation(GameLocation location)
-           {
+        private void explosionAnimation(GameLocation location)
+        {
             Multiplayer multiplayer = Game1.Multiplayer;
             multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(128, 256, 64, 64), 60, 6, 1, base.position.Value, flicker: true, flipped: false));
-               base.destroyMe = true;
-               this.destroyMe = true;
+            base.destroyMe = true;
+            this.destroyMe = true;
             location.projectiles.RemoveWhere((Func<Projectile, bool>)(projectile =>
             {
                 return projectile.destroyMe;
             }));
         }
-      
+
         public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer player)
         {
             if ((bool)base.damagesMonsters.Value)
@@ -182,6 +182,6 @@ namespace BriarSinger.Spells.Components
             return (base.theOneWhoFiredMe.Get(location) as Farmer) ?? Game1.player;
         }
 
-       
+
     }
 }

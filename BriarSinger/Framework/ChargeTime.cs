@@ -27,18 +27,18 @@ namespace BriarSinger.Framework
         internal static float GetChargeTime()
         {
             var caster = Game1.player;
-           
-           
+
+
             if (caster.CurrentTool?.Name == "HarpSword" && ModEntry.IsActionButtonDown() == true)
             {
                 if (chargeComplete == true)
-                    {
+                {
 
                     return 1f;
                 }
                 var requiredChargeTime = 500;
                 var chargeStartTime = pullStartTime;
-             
+
 
                 return Utility.Clamp((float)((Game1.currentGameTime.TotalGameTime.TotalMilliseconds - chargeStartTime) / (double)requiredChargeTime), 0f, 1f);
 
@@ -48,28 +48,28 @@ namespace BriarSinger.Framework
 
         public static void TickUpdate(Farmer who)
         {
-            
-           if (who.CurrentTool?.Name != "HarpSword")
+
+            if (who.CurrentTool?.Name != "HarpSword")
             {
                 return;
             }
             if (who.IsLocalPlayer)
             {
-                    var currentChargeTime = GetChargeTime();
+                var currentChargeTime = GetChargeTime();
 
-                    if (currentChargeTime >= 1f)
-                    {
-                        chargeComplete = true;
+                if (currentChargeTime >= 1f)
+                {
+                    chargeComplete = true;
                     if (canPlaySound == true)
                     {
                         Game1.currentLocation.playSound("select");
                         canPlaySound = false;
                     }
-                    }
-                    else if (currentChargeTime < 1f)
-                    {
-                        chargeComplete = false;
-                    }
+                }
+                else if (currentChargeTime < 1f)
+                {
+                    chargeComplete = false;
+                }
             }
 
             //track how long the charging has been going on here and play a sound and the animation when it's done.
@@ -80,13 +80,13 @@ namespace BriarSinger.Framework
             //links to bool in buttonreleased event
             if (ModEntry.IsActionButtonDown() == false)
             {
-                    if (chargeComplete)
-                    {
-                        var caster = Game1.player;
-                        modEntryInstance.CastStarShot(caster);
-                    }
-                    ResetCharge();
-             
+                if (chargeComplete)
+                {
+                    var caster = Game1.player;
+                    modEntryInstance.CastStarShot(caster);
+                }
+                ResetCharge();
+
             }
         }
 
@@ -94,7 +94,7 @@ namespace BriarSinger.Framework
         {
             if (ModEntry.IsActionButtonDown() == true)
             {
-        //        Game1.player.CanMove = false; //for some reason this freezes the game while charging, so turned off for now
+                //        Game1.player.CanMove = false; //for some reason this freezes the game while charging, so turned off for now
                 isCharging = true;
                 chargeComplete = false;
             }
@@ -121,7 +121,7 @@ namespace BriarSinger.Framework
 
                 percentage = Utility.Clamp(percentage, 0f, 1f);
                 pullStartTime = Math.Abs(currentMilliseconds - (percentage * requiredChargingTime));
-            } 
+            }
         }
         public static void DrawReticle(SpriteBatch b)
         {

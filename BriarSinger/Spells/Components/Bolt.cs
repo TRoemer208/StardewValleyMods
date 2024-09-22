@@ -15,6 +15,7 @@ using StardewValley.TerrainFeatures;
 using StardewValley.Util;
 
 using BriarSinger.Framework;
+using System.Runtime.InteropServices;
 
 namespace BriarSinger.Spells.Components
 {
@@ -28,9 +29,9 @@ namespace BriarSinger.Spells.Components
         public readonly int damage = new int();
 
 
-       public Bolt() { }
+        public Bolt() { }
 
-        public Bolt(int damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, bool isSeeking, GameLocation location = null, Character owner = null) : this()
+        public Bolt(int damage, float xVelocity, float yVelocity, Vector2 startingPosition, int taillength, bool isHoming, GameLocation location = null, Character owner = null) : this()
         {
             this.damage = damage;
             this.damagesMonsters.Value = true;
@@ -40,7 +41,27 @@ namespace BriarSinger.Spells.Components
             base.yVelocity.Value = yVelocity;
             base.position.Value = startingPosition;
             base.ignoreObjectCollisions.Value = true;
-            
+            //  homing.Value = isHoming;
+
+            /*  if (homing)
+              {
+                  float nearestDistance = float.MaxValue;
+                  Monster nearestMonster = null;
+
+                   foreach (var character owner.currentLocation.characters)
+                  {
+                      if (character is Monster mob)
+                      {
+                          float dist = Utility.distance(mob.Position.X, position.X, mob.Position.Y, position.Y);
+                          if (dist < nearestDistance)
+                          {
+                              nearestDistance = dist;
+                              nearestMonster = mob;
+                          }
+                      }
+                  }
+                  homeTarget = nearestMonster; 
+              }*/
         }
 
         public override void draw(SpriteBatch b)
@@ -98,9 +119,9 @@ namespace BriarSinger.Spells.Components
 
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-         //Since Bolt is supposed to a "called from the heavens" kinda thing, we don't want it to touch terrain at all, so we override the base game's version to do nothing with it.
+            //Since Bolt is supposed to a "called from the heavens" kinda thing, we don't want it to touch terrain at all, so we override the base game's version to do nothing with it.
         }
-     
+
         public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
         {
             location.playSound("thunder_small");
@@ -113,8 +134,8 @@ namespace BriarSinger.Spells.Components
         }
 
         //Explosion Animation plays a sprite for all active players of an animation of the projectile going poof. Then it flips the destroyMe boolean to true and runs a cleanup to remove projectiles with that boolean. All 'endings' to the projectile need to call this.
-           private void explosionAnimation(GameLocation location)
-           {
+        private void explosionAnimation(GameLocation location)
+        {
             Multiplayer multiplayer = Game1.Multiplayer;
             multiplayer.broadcastSprites(location, new TemporaryAnimatedSprite("TileSheets\\animations", new Rectangle(64, 640, 64, 64), 60, 7, 1, base.position.Value, flicker: false, flipped: false));
             this.destroyMe = true;
@@ -155,7 +176,7 @@ namespace BriarSinger.Spells.Components
         {
             var angle = 0f;
             //Since this is always pointing down, we just set the angle to be the same every time.
-         return angle;
+            return angle;
         }
 
         public virtual Farmer GetPlayerWhoFiredMe(GameLocation location)
@@ -187,7 +208,7 @@ namespace BriarSinger.Spells.Components
             return basevector;
         }
 
-       
+
 
 
     }
