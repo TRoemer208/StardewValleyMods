@@ -6,5 +6,5 @@
   "UniqueID": "Teoshen.HotSpringRegeneration",
   "EntryDll": "HotSpringRegeneration.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:28051" ]
 }
